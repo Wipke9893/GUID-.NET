@@ -59,9 +59,9 @@ namespace StudentPortalWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Student viewModel)
         {
-          var student = await dbContext.Students.FindAsync(viewModel.Id);
+            var student = await dbContext.Students.FindAsync(viewModel.Id);
 
-            if(student is not null)
+            if (student is not null)
             {
                 student.Name = viewModel.Name;
                 student.Email = viewModel.Email;
@@ -79,7 +79,7 @@ namespace StudentPortalWeb.Controllers
         {
             var student = await dbContext.Students.FindAsync(id);
 
-            if(student is not null)
+            if (student is not null)
             {
                 dbContext.Students.Remove(student);
                 await dbContext.SaveChangesAsync();
@@ -87,6 +87,31 @@ namespace StudentPortalWeb.Controllers
 
             return RedirectToAction("List", "Students");
         }
+
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> Display(Guid id)
+        {
+            var student = await dbContext.Students.FindAsync(id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new DisplayStudentViewModel
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Email = student.Email,
+                Phone = student.Phone,
+                Subscribed = student.Subscribed
+            };
+
+            return View(viewModel);
+        }
+
 
     }
 }
