@@ -4,25 +4,26 @@ using StudentPortalWeb.Data;
 using StudentPortalWeb.Models;
 using StudentPortalWeb.Models.Entities;
 
-namespace StudentPortalWeb.Controllers
+namespace StudentPortalWeb.Controllers;
+
+public class StudentsController : Controller
 {
-    public class StudentsController : Controller
+    private readonly ApplicationDbContext _dbContext;
+
+    public StudentsController(ApplicationDbContext dbContext)
     {
-        private readonly ApplicationDbContext dbContext;
-        public StudentsController(ApplicationDbContext dbContext)
-        {
-            this.dbContext = dbContext;
-        }
+        _dbContext = dbContext;
+    }
 
+    public IActionResult Add()
+    {
+        return View();
+    }
 
-        [HttpGet]
-        public IActionResult Add()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Add(AddStudentViewModel viewModel)
+    [HttpPost]
+    public async Task<IActionResult> Add(StudentViewModel viewModel)
+    {
+        if (ModelState.IsValid)
         {
             var student = new Student
             {
@@ -32,62 +33,125 @@ namespace StudentPortalWeb.Controllers
                 Subscribed = viewModel.Subscribed
             };
 
-            await dbContext.Students.AddAsync(student);
-            await dbContext.SaveChangesAsync();
-
-            return View();
+            await _dbContext.Students.AddAsync(student);
+            await _dbContext.SaveChangesAsync();
         }
 
+        return View(viewModel);
+    }
 
-        [HttpGet]
-        public async Task<IActionResult> List()
+    // /
+    // /Strudents/List?page=2
+    public async Task<IActionResult> Index(int? page)
+    {
+        var skip = 0;
+        var pageSize = 2;
+
+        if (page.HasValue && page > 0)
         {
-            var students = await dbContext.Students.ToListAsync();
-
-            return View(students);
-
+            // (2 - 1) * 25
+            // (3 - 1) * 25
+            skip = (page.Value - 1) * pageSize;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Edit(Guid id)
-        {
-            var student = await dbContext.Students.FindAsync(id);
+        var students = await _dbContext.Students
+            .Skip(skip)
+            .Take(pageSize)
+            .ToListAsync();
 
-            return View(student);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Edit(Student viewModel)
-        {
-          var student = await dbContext.Students.FindAsync(viewModel.Id);
-
-            if(student is not null)
+        var viewModels = students
+            .Select(student => new DisplayStudentViewModel()
             {
-                student.Name = viewModel.Name;
-                student.Email = viewModel.Email;
-                student.Phone = viewModel.Phone;
-                student.Subscribed = viewModel.Subscribed;
+                Name = student.Name,
+                Id = student.Id,
+                Phone = student.Phone,
+                Email = student.Email,
+                Subscribed = student.Subscribed,
+            }).ToList();
 
-                await dbContext.SaveChangesAsync();
-            }
+        return View(viewModels);
+    }
 
-            return RedirectToAction("List", "Students");
-        }
+    public async Task<IActionResult> Edit(Guid id)
+    {
+        var student = await _dbContext.Students.FindAsync(id);
 
-        [HttpPost]
-        public async Task<IActionResult> Delete(Guid id)
+        if (student is null)
         {
-            var student = await dbContext.Students.FindAsync(id);
-
-            if(student is not null)
-            {
-                dbContext.Students.Remove(student);
-                await dbContext.SaveChangesAsync();
-            }
-
-            return RedirectToAction("List", "Students");
+            return NotFound();
         }
 
+        var model = new StudentViewModel()
+        {
+            Name = student.Name,
+            Email = student.Email,
+            Phone = student.Phone,
+            Subscribed = student.Subscribed,
+        };
+
+        return View(model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(Guid id, StudentViewModel viewModel)
+    {
+        var student = await _dbContext.Students.FindAsync(id);
+
+        if (student is null)
+        {
+            return NotFound();
+        }
+
+        if (ModelState.IsValid)
+        {
+            student.Name = viewModel.Name;
+            student.Email = viewModel.Email;
+            student.Phone = viewModel.Phone;
+            student.Subscribed = viewModel.Subscribed;
+
+            _dbContext.Students.Update(student);
+            await _dbContext.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var student = await _dbContext.Students.FindAsync(id);
+
+        if (student is null)
+        {
+            return NotFound();
+        }
+
+        _dbContext.Students.Remove(student);
+        await _dbContext.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> Display(Guid id)
+    {
+        var student = await _dbContext.Students.FindAsync(id);
+
+        if (student is null)
+        {
+            return NotFound();
+        }
+
+        var viewModel = new StudentViewModel
+        {
+            Name = student.Name,
+            Email = student.Email,
+            Phone = student.Phone,
+            Subscribed = student.Subscribed
+        };
+
+        return View(viewModel);
     }
 }
 
