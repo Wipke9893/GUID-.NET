@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\StudentPortal",
+    "\\StudentPortal\\Controllers",
+    "\\StudentPortal\\Data",
+    "\\StudentPortal\\Models\\Entities",
+    "\\StudentPortal\\Views",
+    "\\StudentPortal\\Views\\Students"
+  ],
+  "SelectedNode": "\\StudentPortal\\Controllers\\StudentsController.cs",
+  "PreviewInSolutionExplorer": false
+}
