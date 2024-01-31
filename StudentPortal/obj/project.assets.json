@@ -4015,19 +4015,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\jtelford\\.nuget\\packages\\": {}
+    "C:\\Users\\wipke\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\jtelford\\WorkSpace\\GUID-.NET\\StudentPortal\\StudentPortalWeb.csproj",
+      "projectUniqueName": "C:\\Users\\wipke\\workspace\\GUID-.NET\\StudentPortal\\StudentPortalWeb.csproj",
       "projectName": "StudentPortalWeb",
-      "projectPath": "C:\\Users\\jtelford\\WorkSpace\\GUID-.NET\\StudentPortal\\StudentPortalWeb.csproj",
-      "packagesPath": "C:\\Users\\jtelford\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\jtelford\\WorkSpace\\GUID-.NET\\StudentPortal\\obj\\",
+      "projectPath": "C:\\Users\\wipke\\workspace\\GUID-.NET\\StudentPortal\\StudentPortalWeb.csproj",
+      "packagesPath": "C:\\Users\\wipke\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\wipke\\workspace\\GUID-.NET\\StudentPortal\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\jtelford\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\wipke\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4035,6 +4040,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
